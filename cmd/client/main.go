@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image/color"
 	"log"
 
 	"github.com/TNAucoin/go-game-of-life/internal/world"
@@ -18,7 +17,6 @@ const (
 type Game struct {
 	world            *world.World
 	pixels           []byte
-	canvasImage      *ebiten.Image
 	gameStateRunning bool
 }
 
@@ -43,7 +41,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if g.pixels == nil {
 		g.pixels = make([]byte, screenWidth*screenHeight*4)
 	}
-	screen.DrawImage(g.canvasImage, nil)
 	g.world.Draw(g.pixels)
 	screen.ReplacePixels(g.pixels)
 	mx, my := ebiten.CursorPosition()
@@ -58,10 +55,8 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func main() {
 	g := &Game{
 		world:            world.NewWorld(screenWidth, screenHeight, int((screenWidth*screenHeight)/10)),
-		canvasImage:      ebiten.NewImage(screenWidth, screenHeight),
 		gameStateRunning: false,
 	}
-	g.canvasImage.Fill(color.Black)
 	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
 	ebiten.SetWindowTitle("Go Game of Life")
 	if err := ebiten.RunGame(g); err != nil {
